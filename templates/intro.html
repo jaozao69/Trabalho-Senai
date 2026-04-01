@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BudgetBuddy AI | Mentor Paulista</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💸</text></svg>">
+    <style>
+        *{ margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI', sans-serif; }
+        body{ min-height:100vh; background: #0a0a0a; color: white; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .bg-gradient { position: absolute; width: 600px; height: 600px; background: radial-gradient(circle, #ff00aa33 0%, #6a00ff33 100%); filter: blur(100px); z-index: -1; animation: move 12s infinite alternate; }
+        @keyframes move { from { transform: translate(-150px, -150px); } to { transform: translate(150px, 150px); } }
+        .content { text-align: center; max-width: 800px; padding: 20px; z-index: 1; }
+        h1 { font-size: 70px; font-weight: 900; margin-bottom: 15px; background: linear-gradient(90deg, #ff00aa, #6a00ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -2px; }
+        p { font-size: 22px; opacity: 0.9; margin-bottom: 45px; line-height: 1.5; font-weight: 300; }
+        .btn { padding: 18px 45px; border-radius: 15px; text-decoration: none; font-weight: bold; font-size: 18px; transition: 0.3s; display: inline-block; margin: 10px; }
+        .btn-primary { background: white; color: black; }
+        .btn-primary:hover { background: #ff00aa; color: white; transform: translateY(-3px); }
+        .btn-secondary { border: 1px solid rgba(255,255,255,0.3); color: white; background: rgba(255,255,255,0.05); }
+        .btn-secondary:hover { background: rgba(255,255,255,0.1); }
+    </style>
+</head>
+<body>
+    <div class="bg-gradient"></div>
+    <div class="content">
+        <h1>E aí, vamo crescer?</h1>
+        <p>Eu sou o seu Mentor Financeiro Independente. Chega de passar perrengue, meu. Com inteligência e estratégia, a gente coloca esse seu trampo pra render de verdade.</p>
+        <div class="buttons">
+            <a href="/login" class="btn btn-primary">Bora pro Dash</a>
+            <a href="/register" class="btn btn-secondary">Quero me cadastrar</a>
+        </div>
+    </div>
+</body>
+</html>

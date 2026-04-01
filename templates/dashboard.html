@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>BudgetBuddy AI PRO</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💸</text></svg>">
+    <style>
+        :root { --primary: #ff00aa; --secondary: #6a00ff; --dark: #1a1a1a; }
+        *{ margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI', sans-serif; }
+        body{ min-height:100vh; background: linear-gradient(135deg, #4b0082, #ff00aa); color:white; padding:30px; }
+        
+        .container{ max-width:1000px; margin:auto; position:relative; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        
+        /* Botão Sair Principal */
+        .logout-btn{ padding:10px 20px; border:none; border-radius:12px; font-weight:bold; cursor:pointer; color:white; background: rgba(255,255,255,0.2); transition:0.3s; }
+        .logout-btn:hover { background: rgba(255,0,0,0.4); }
+
+        /* Grid de Cards */
+        .grid{ display:grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap:20px; }
+        .card{ background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); padding:20px; border-radius:20px; border: 1px solid rgba(255,255,255,0.1); }
+        .card p { font-size: 24px; font-weight: bold; margin: 10px 0; }
+        .edit-btn{ padding:5px 12px; border:none; background: var(--primary); color:white; border-radius:8px; cursor:pointer; }
+
+        /* MODAL - CORREÇÃO DE ESPAÇAMENTO AQUI */
+        .modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); backdrop-filter:blur(8px); z-index:2000; justify-content:center; align-items:center; }
+        .modal-content { background: #1a1a1a; padding:40px; border-radius:30px; width:90%; max-width:400px; text-align:center; border: 1px solid var(--primary); box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+        .modal-content h2 { margin-bottom: 20px; font-size: 24px; }
+        
+        .modal-btns { 
+            display: flex; 
+            gap: 25px; /* ESPAÇO ENTRE OS BOTÕES */
+            justify-content: center; 
+            margin-top: 30px; 
+        }
+
+        .btn-confirm { background: var(--primary); color:white; border:none; padding:12px 30px; border-radius:12px; cursor:pointer; font-weight:bold; flex: 1; transition: 0.2s; }
+        .btn-cancel { background: #444; color:white; border:none; padding:12px 30px; border-radius:12px; cursor:pointer; flex: 1; transition: 0.2s; }
+        .btn-confirm:hover { transform: scale(1.05); filter: brightness(1.1); }
+        .btn-cancel:hover { background: #555; }
+
+        /* Gráficos */
+        .graficos{ display:flex; gap:20px; flex-wrap:wrap; margin-top:30px; }
+        canvas{ background:white; border-radius:20px; padding:15px; max-width:480px; max-height:320px; flex:1; }
+
+        /* Chat */
+        .chat-btn{ position:fixed; bottom:20px; right:20px; width:65px; height:65px; border-radius:50%; font-size:28px; background: linear-gradient(135deg,var(--primary),var(--secondary)); color:white; border:none; cursor:pointer; z-index:1000; }
+        #chat{ position:fixed; bottom:100px; right:20px; width:350px; background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); border-radius:20px; overflow:hidden; display:none; z-index:1000; border: 1px solid rgba(255,255,255,0.1); }
+        #messages{ height:300px; overflow-y:auto; padding:15px; }
+        .msg-user{ background:var(--secondary); padding:10px; border-radius:15px 15px 0 15px; margin:8px 0; text-align: right; }
+        .msg-bot{ background:var(--primary); padding:10px; border-radius:15px 15px 15px 0; margin:8px 0; cursor: pointer; }
+        .chat-input{ display:flex; background: #fff; padding: 5px; }
+        .chat-input input{ flex:1; padding:12px; border:none; outline:none; color: #333; }
+        .chat-input button{ width:45px; height:45px; border:none; background:var(--secondary); color:white; border-radius:10px; cursor:pointer; margin-left:5px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>💸 BudgetBuddy <small style="font-size: 14px; opacity: 0.6;">{{ usuario_atual }}</small></h1>
+        <button class="logout-btn" onclick="abrirConfirmacaoSair()">Sair</button>
+    </div>
+
+    <div class="grid">
+        <div class="card"><h3>Salário</h3><p id="salario"></p><button class="edit-btn" onclick="abrirModal('salario')">Alterar</button></div>
+        <div class="card"><h3>Gastos</h3><p id="gastos"></p><button class="edit-btn" onclick="abrirModal('gastos')">Alterar</button></div>
+        <div class="card"><h3>Score</h3><p id="score"></p></div>
+        <div class="card"><h3>Lazer</h3><p id="limite"></p><button class="edit-btn" onclick="abrirModal('limite')">Alterar</button></div>
+    </div>
+
+    <div class="graficos">
+        <canvas id="graficoPizza"></canvas>
+        <canvas id="graficoBarra"></canvas>
+    </div>
+</div>
+
+<div id="modalSair" class="modal">
+    <div class="modal-content">
+        <h2>Confirmar Saída?</h2>
+        <div class="modal-btns">
+            <button class="btn-cancel" onclick="fecharModalSair()">Não</button>
+            <button class="btn-confirm" onclick="confirmarSair()">Sair</button>
+        </div>
+    </div>
+</div>
+
+<div id="modalEdit" class="modal">
+    <div class="modal-content">
+        <h2 id="modalTitle">Editar</h2>
+        <input type="number" id="modalInput" style="width:100%; padding:10px; margin:15px 0; border-radius:10px; border:none;">
+        <div class="modal-btns">
+            <button class="btn-cancel" onclick="fecharModal()">Voltar</button>
+            <button class="btn-confirm" onclick="salvarValor()">Salvar</button>
+        </div>
+    </div>
+</div>
+
+<button class="chat-btn" onclick="toggleChat()">💬</button>
+<div id="chat">
+    <div class="chat-header" style="padding:15px; border-bottom:1px solid rgba(255,255,255,0.1);">Mentor BudgetBuddy 🤖</div>
+    <div id="messages"></div>
+    <div class="chat-input">
+        <input id="msg" placeholder="E aí, vamo trocar uma ideia?">
+        <button class="mic-btn" onclick="ouvir()">🎤</button>
+        <button onclick="send()">➤</button>
+    </div>
+</div>
+
+<script>
+    const user = "{{ usuario_atual }}";
+    const storageKey = "dados_" + user;
+    let currentEditType = "";
+    let dados = JSON.parse(localStorage.getItem(storageKey)) || { salario:3000, gastos:0, limite:500 };
+
+    function atualizar(){
+        document.getElementById('salario').innerText = "R$ " + dados.salario.toLocaleString();
+        document.getElementById('gastos').innerText = "R$ " + dados.gastos.toLocaleString();
+        document.getElementById('limite').innerText = "R$ " + dados.limite.toLocaleString();
+        let score = Math.round((dados.gastos / dados.salario) * 100) || 0;
+        document.getElementById('score').innerText = score + "%";
+        localStorage.setItem(storageKey, JSON.stringify(dados));
+        desenharGrafico();
+    }
+
+    function abrirModal(t){ currentEditType=t; document.getElementById('modalTitle').innerText="Editar "+t; document.getElementById('modalInput').value=dados[t]; document.getElementById('modalEdit').style.display="flex"; }
+    function fecharModal(){ document.getElementById('modalEdit').style.display="none"; }
+    function salvarValor(){ let v=document.getElementById('modalInput').value; if(v!==""){ dados[currentEditType]=Number(v); atualizar(); fecharModal(); } }
+    
+    function abrirConfirmacaoSair(){ document.getElementById('modalSair').style.display = "flex"; }
+    function fecharModalSair(){ document.getElementById('modalSair').style.display = "none"; }
+    function confirmarSair(){ window.location.replace("/logout"); }
+
+    let chartPizza, chartBarra;
+    function desenharGrafico(){
+        let ctx1 = document.getElementById('graficoPizza').getContext('2d');
+        if(chartPizza) chartPizza.destroy();
+        chartPizza = new Chart(ctx1, { type:'pie', data:{ labels:["Gastos","Saldo"], datasets:[{ data:[dados.gastos, Math.max(0, dados.salario-dados.gastos)], backgroundColor:['#ff00aa','#6a00ff'], borderWidth:0 }]}});
+        let ctx2 = document.getElementById('graficoBarra').getContext('2d');
+        if(chartBarra) chartBarra.destroy();
+        chartBarra = new Chart(ctx2, { type:'bar', data:{ labels:["Salário","Gastos","Lazer"], datasets:[{ label:'R$', data:[dados.salario, dados.gastos, dados.limite], backgroundColor:'#ff00aa', borderRadius:10 }]}});
+    }
+
+    function toggleChat(){ let c=document.getElementById('chat'); c.style.display=c.style.display==='block'?'none':'block'; }
+
+    function falar(texto) {
+        window.speechSynthesis.cancel();
+        let limpo = texto.replace(/\*/g, '').replace(/R\$/g, 'reais'); 
+        const ut = new SpeechSynthesisUtterance(limpo);
+        ut.lang = 'pt-BR';
+        window.speechSynthesis.speak(ut);
+    }
+
+    function ouvir() {
+        const rec = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        rec.lang = 'pt-BR';
+        rec.onresult = (e) => { document.getElementById('msg').value = e.results[0][0].transcript; send(); };
+        rec.start();
+    }
+
+    async function send(){
+        let msg = document.getElementById('msg').value;
+        if(!msg) return;
+        let area = document.getElementById('messages');
+        area.innerHTML += `<div class="msg-user">${msg}</div>`;
+        document.getElementById('msg').value = '';
+
+        let res = await fetch('/chat', {
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body: JSON.stringify({ mensagem: msg, financeiro: dados })
+        });
+        let data = await res.json();
+        
+        let div = document.createElement("div");
+        div.className = "msg-bot";
+        div.innerText = data.resposta;
+        div.onclick = () => falar(data.resposta);
+        area.appendChild(div);
+        falar(data.resposta); 
+        area.scrollTop = area.scrollHeight;
+    }
+    atualizar();
+</script>
+</body>
+</html>

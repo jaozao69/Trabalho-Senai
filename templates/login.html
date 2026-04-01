@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Login</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI', sans-serif;
+}
+
+body{
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background: linear-gradient(135deg,#4b0082,#ff00aa);
+    color:white;
+}
+
+/* CARD CENTRAL RESPONSIVO */
+.card{
+    width:100%;
+    max-width:380px; /* 🔥 controla o tamanho máximo */
+    padding:40px 30px;
+    border-radius:25px;
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(15px);
+    box-shadow:0 10px 40px rgba(0,0,0,0.3);
+    text-align:center;
+}
+
+/* TÍTULO */
+h2{
+    margin-bottom:20px;
+    font-size:28px;
+}
+
+/* INPUTS */
+input{
+    width:100%;
+    padding:14px;
+    margin:10px 0;
+    border:none;
+    border-radius:15px;
+    outline:none;
+    background: rgba(255,255,255,0.9);
+    font-size:15px;
+}
+
+/* BOTÃO LOGIN */
+button{
+    width:100%;
+    padding:14px;
+    margin-top:10px;
+    border:none;
+    border-radius:15px;
+    font-size:16px;
+    font-weight:bold;
+    color:white;
+    cursor:pointer;
+    background: linear-gradient(135deg,#ff00aa,#ff0080);
+    transition:0.3s;
+}
+
+button:hover{
+    transform:scale(1.03);
+}
+
+/* SEÇÃO REGISTRO */
+.register-box{
+    margin-top:25px;
+}
+
+/* TEXTO */
+.register-text{
+    font-size:14px;
+    margin-bottom:10px;
+    opacity:0.9;
+}
+
+/* BOTÃO CRIAR CONTA */
+.register-btn{
+    display:block;
+    width:100%;
+    padding:12px;
+    border-radius:15px;
+    text-decoration:none;
+    color:white;
+    font-weight:bold;
+    background: linear-gradient(135deg,#6a00ff,#ff00aa);
+    box-shadow:0 5px 15px rgba(0,0,0,0.3);
+    transition:0.3s;
+}
+
+.register-btn:hover{
+    transform:scale(1.05);
+}
+
+/* RESPONSIVO EXTRA */
+@media (max-width: 400px){
+    .card{
+        padding:30px 20px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+
+<h2>💸 BudgetBuddy</h2>
+
+<form method="post">
+    <input name="user" placeholder="Usuário" required>
+    <input type="password" name="pass" placeholder="Senha" required>
+    <button type="submit">Entrar</button>
+</form>
+
+{% if erro %}
+<p style="color:red; margin-top:10px;">{{ erro }}</p>
+{% endif %}
+
+<div class="register-box">
+    <div class="register-text">Não tem uma conta? Inicie uma nova sessão!</div>
+    <a href="/register" class="register-btn">Criar conta</a>
+</div>
+
+</div>
+
+</body>
+</html>

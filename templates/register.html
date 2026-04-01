@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Criar Conta</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI', sans-serif;
+}
+
+body{
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background: linear-gradient(135deg,#4b0082,#ff00aa);
+    color:white;
+}
+
+/* CARD RESPONSIVO */
+.card{
+    width:100%;
+    max-width:380px;
+    padding:40px 30px;
+    border-radius:25px;
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(15px);
+    box-shadow:0 10px 40px rgba(0,0,0,0.3);
+    text-align:center;
+}
+
+h2{
+    margin-bottom:20px;
+}
+
+/* INPUTS */
+input{
+    width:100%;
+    padding:14px;
+    margin:10px 0;
+    border:none;
+    border-radius:15px;
+    outline:none;
+    background: rgba(255,255,255,0.9);
+}
+
+/* BOTÃO CADASTRAR */
+button{
+    width:100%;
+    padding:14px;
+    margin-top:10px;
+    border:none;
+    border-radius:15px;
+    font-size:16px;
+    font-weight:bold;
+    color:white;
+    cursor:pointer;
+    background: linear-gradient(135deg,#ff00aa,#ff0080);
+    transition:0.3s;
+}
+
+button:hover{
+    transform:scale(1.03);
+}
+
+/* BOTÃO VOLTAR (NOVO DESIGN) */
+.back-btn{
+    display:block;
+    width:100%;
+    padding:12px;
+    margin-top:20px;
+    border-radius:15px;
+    text-decoration:none;
+    font-weight:bold;
+    color:white;
+    background: linear-gradient(135deg,#6a00ff,#4b0082);
+    box-shadow:0 5px 15px rgba(0,0,0,0.3);
+    transition:0.3s;
+}
+
+.back-btn:hover{
+    transform:scale(1.05);
+    opacity:0.95;
+}
+
+/* RESPONSIVO */
+@media (max-width: 400px){
+    .card{
+        padding:30px 20px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+
+<h2>📝 Criar Conta</h2>
+
+<form method="post">
+    <input name="user" placeholder="Usuário" required>
+    <input type="password" name="pass" placeholder="Senha" required>
+    <button type="submit">Cadastrar</button>
+</form>
+
+{% if erro %}
+<p style="color:red; margin-top:10px;">{{ erro }}</p>
+{% endif %}
+
+<!-- BOTÃO VOLTAR MELHORADO -->
+<a href="/login" class="back-btn">Voltar para o login</a>
+
+</div>
+
+</body>
+</html>
